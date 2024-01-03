@@ -1,6 +1,9 @@
-# flutter_application_1
+# flutter_first_app
 
-A new Flutter project.
+First time on Flutter, so time to play !!
+
+I am referring to this project:
+https://codelabs.developers.google.com/codelabs/flutter-codelab-first?hl=fr#2
 
 ## Getting Started
 
