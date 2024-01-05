@@ -64,21 +64,75 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // void _incrementCounter() {
-  //   setState(() {
-  // This call to setState tells the Flutter framework that something has
-  // changed in this State, which causes it to rerun the build method below
-  // so that the display can reflect the updated values. If we changed
-  // _counter without calling setState(), then the build method would not be
-  // called again, and so nothing would appear to happen.
-  //   });
-  // }
+  var selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     // La méthode build() est automatiquement appelée dès que les conditions
     // du widget changent.
     // Elle renvoit forcément à un widget ou à une arborescence de widget imbriqués.
+
+    Widget page;
+    switch (selectedIndex) {
+      case 0:
+        page = GeneratorPage();
+        break;
+      case 1:
+        page = Placeholder();
+        // Placeholder insère un rectangle barré pour marquer un UI pas encore dev
+        break;
+      default:
+        throw UnimplementedError('no widget fo $selectedIndex');
+    }
+    return Scaffold(
+      // Scaffold est utilisé pour le widget de 1er niveau
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: Text("' Please don't die !! '",
+            style: TextStyle(color: Colors.white, fontStyle: FontStyle.italic)),
+      ),
+
+      body: Row(
+        children: [
+          SafeArea(
+            // SafeArea garantit que l'enfant ne sera pas masqué
+            child: NavigationRail(
+              extended: false,
+              destinations: [
+                NavigationRailDestination(
+                    icon: Icon(Icons.home), label: Text('Home')),
+                NavigationRailDestination(
+                    icon: Icon(Icons.favorite), label: Text('Favorites')),
+              ],
+              selectedIndex: selectedIndex,
+              onDestinationSelected: (value) {
+                setState(() {
+                  selectedIndex = value;
+                  // This call to setState tells the Flutter framework that something
+                  // has changed in this State, which causes it to rerun the build
+                  // method below so that the display can reflect the updated values.
+                  // Without setState(), the build method would not be
+                  // called again, and so nothing would appear to happen.
+                });
+              },
+            ),
+          ),
+          Expanded(
+            // Expanded prendra un max de place
+            child: Container(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              child: page,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class GeneratorPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     // la méthode watch() suit les modifs de l'état.
     var pair = appState.current;
@@ -88,8 +142,6 @@ class _MyHomePageState extends State<MyHomePage> {
     final titleStyle = theme.textTheme.displaySmall!.copyWith(
       color: theme.colorScheme.primary,
     );
-    // le langage Dart est null-safe, or la propriété displayMedium
-    // pourrait l'être, d'où l'opérateur bang.
 
     IconData icon;
     if (appState.favorites.contains(pair)) {
@@ -98,52 +150,41 @@ class _MyHomePageState extends State<MyHomePage> {
       icon = Icons.favorite_border;
     }
 
-    return Scaffold(
-      // Scaffold est utilisé pour le widget de 1er niveau
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("'Please don't die !!'"),
-      ),
-
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Plant's name idea:",
-              style: titleStyle,
-            ),
-            SizedBox(height: 40),
-            BigCard(pair: pair),
-            SizedBox(height: 40),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () {
-                    appState.toggleFavorite();
-                  },
-                  icon: Icon(icon),
-                  label: Text(
-                    'Love it !',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(width: 40),
-                ElevatedButton(
-                  onPressed: () {
-                    appState.getNext();
-                  },
-                  child: Text(
-                    'Unsatisfied',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            )
-          ],
+    return Center(
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text(
+          "Plant's name idea:",
+          style: titleStyle,
         ),
-      ),
+        SizedBox(height: 40),
+        BigCard(pair: pair),
+        SizedBox(height: 40),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ElevatedButton.icon(
+              onPressed: () {
+                appState.toggleFavorite();
+              },
+              icon: Icon(icon),
+              label: Text(
+                'Love it !',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(width: 40),
+            ElevatedButton(
+              onPressed: () {
+                appState.getNext();
+              },
+              child: Text(
+                'Unsatisfied',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        )
+      ]),
     );
   }
 }

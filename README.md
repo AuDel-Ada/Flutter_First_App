@@ -16,3 +16,9 @@ You can use F5 or run & debug icon, as well.
 
 Target device can be changed first at the screen bottom.
 This project is checked on Chrome for desktop & Galaxy S9 for mobile.
+
+## About Dart
+
+Typed language
+Type is announced before the variable
+Dart language is null-safe, that's why we have to use bang operator in some case
