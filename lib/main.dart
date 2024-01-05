@@ -37,6 +37,17 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
     // NotifyListeners() garantit que tout ce qui "surveille" MyAppState soit informé.
   }
+
+  var favorites = <WordPair>[];
+
+  void toggleFavorite() {
+    if (favorites.contains(current)) {
+      favorites.remove(current);
+    } else {
+      favorites.add(current);
+    }
+    notifyListeners();
+  }
 }
 
 class MyHomePage extends StatefulWidget {
@@ -80,6 +91,13 @@ class _MyHomePageState extends State<MyHomePage> {
     // le langage Dart est null-safe, or la propriété displayMedium
     // pourrait l'être, d'où l'opérateur bang.
 
+    IconData icon;
+    if (appState.favorites.contains(pair)) {
+      icon = Icons.favorite;
+    } else {
+      icon = Icons.favorite_border;
+    }
+
     return Scaffold(
       // Scaffold est utilisé pour le widget de 1er niveau
       appBar: AppBar(
@@ -97,15 +115,31 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             SizedBox(height: 40),
             BigCard(pair: pair),
-            SizedBox(height: 60),
-            ElevatedButton(
-              onPressed: () {
-                appState.getNext();
-              },
-              child: Text(
-                'Unsatisfied',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+            SizedBox(height: 40),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {
+                    appState.toggleFavorite();
+                  },
+                  icon: Icon(icon),
+                  label: Text(
+                    'Love it !',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(width: 40),
+                ElevatedButton(
+                  onPressed: () {
+                    appState.getNext();
+                  },
+                  child: Text(
+                    'Unsatisfied',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
             )
           ],
         ),
