@@ -17,21 +17,6 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Plant namer app',
         theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // TRY THIS: Try running your application with "flutter run". You'll see
-          // the application has a purple toolbar. Then, without quitting the app,
-          // try changing the seedColor in the colorScheme below to Colors.green
-          // and then invoke "hot reload" (save your changes or press the "hot
-          // reload" button in a Flutter-supported IDE, or press "r" if you used
-          // the command line to start the app).
-          //
-          // Notice that the counter didn't reset back to zero; the application
-          // state is not lost during the reload. To reset the state, use hot
-          // restart instead.
-          //
-          // This works for code too, not just values: Most code changes can be
-          // tested with just a hot reload.
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
           useMaterial3: true,
         ),
@@ -42,16 +27,24 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier {
+  // l'état d'intégrité de l'app, c'est-à-dire les données dont elle a besoin.
+  // Le "ChangeNotifier" permet d'informer les autres widgets de ces modifs,
+  // l'état est transmis via le ChangeNotifierProvider qui est dans MyApp.
   var current = WordPair.random();
+
+  void getNext() {
+    current = WordPair.random();
+    notifyListeners();
+    // NotifyListeners() garantit que tout ce qui "surveille" MyAppState soit informé.
+  }
 }
 
 class MyHomePage extends StatefulWidget {
   // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
+  // that it has a State object that contains fields that affect
   // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
+  // This class is the configuration for the state. It holds the values
+  // provided by the parent (in this case the App widget) and
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
@@ -72,29 +65,31 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // La méthode build() est automatiquement appelée dès que les conditions
+    // du widget changent.
+    // Elle renvoit forcément à un widget ou à une arborescence de widget imbriqués.
     var appState = context.watch<MyAppState>();
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    // la méthode watch() suit les modifs de l'état.
     return Scaffold(
+      // Scaffold est utilisé pour le widget de 1er niveau
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("Please don't die !!"),
+        title: Text("'Please don't die !!'"),
       ),
       body: Column(
         // Column is a layout widget. It takes a list of children and
         // arranges them vertically. By default, it sizes itself to fit its
         // children horizontally, and tries to be as tall as its parent.
-        //
-        // Column has various properties to control how it sizes itself and
-        // how it positions its children. Here we use mainAxisAlignment to
-        // center the children vertically; the main axis here is the vertical
-        // axis because Columns are vertical (the cross axis would be
-        // horizontal).
-        children: [Text('A random idea:'), Text(appState.current.asLowerCase)],
+        children: [
+          Text("Plant's name idea:"),
+          Text(appState.current.asPascalCase),
+          ElevatedButton(
+            onPressed: () {
+              appState.getNext();
+            },
+            child: Text('Unsatisfied'),
+          )
+        ],
       ),
     );
   }

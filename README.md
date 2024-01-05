@@ -5,15 +5,14 @@ First time on Flutter, so time to play !!
 I am referring to this project:
 https://codelabs.developers.google.com/codelabs/flutter-codelab-first?hl=fr#2
 
+You will find a looot of comments in main.dart, as I use this project
+to understand the Dart syntax and the Flutter running.
+
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+CLI: Flutter run and r for hot reload
+(the application state is not lost during the reload. To reset the state, use hot restart instead)
+You can use F5 or run & debug icon, as well.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Target device can be changed first at the screen bottom.
+This project is checked on Chrome for desktop & Galaxy S9 for mobile.
