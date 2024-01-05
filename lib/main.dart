@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = GeneratorPage();
         break;
       case 1:
-        page = Placeholder();
+        page = FavoritesPage();
         // Placeholder insère un rectangle barré pour marquer un UI pas encore dev
         break;
       default:
@@ -182,7 +182,7 @@ class GeneratorPage extends StatelessWidget {
                 appState.getNext();
               },
               child: Text(
-                'Unsatisfied',
+                'Nope',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
@@ -220,6 +220,41 @@ class BigCard extends StatelessWidget {
           // des mots par un lecteur d'écran
         ),
       ),
+    );
+  }
+}
+
+class FavoritesPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final titleStyle = theme.textTheme.displaySmall!.copyWith(
+      color: theme.colorScheme.primary,
+    );
+
+    var appState = context.watch<MyAppState>();
+
+    if (appState.favorites.isEmpty) {
+      return Center(
+        child: Text('No favorites yet !'),
+      );
+    }
+
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Text(
+            "You have ${appState.favorites.length} fav plant's names:",
+            style: titleStyle,
+          ),
+        ),
+        for (var pair in appState.favorites)
+          ListTile(
+            leading: Icon(Icons.favorite),
+            title: Text(pair.asPascalCase),
+          )
+      ],
     );
   }
 }
