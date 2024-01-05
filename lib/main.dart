@@ -70,26 +70,76 @@ class _MyHomePageState extends State<MyHomePage> {
     // Elle renvoit forcément à un widget ou à une arborescence de widget imbriqués.
     var appState = context.watch<MyAppState>();
     // la méthode watch() suit les modifs de l'état.
+    var pair = appState.current;
+
+    final theme = Theme.of(context);
+    // appelle le theme de l'app
+    final titleStyle = theme.textTheme.displaySmall!.copyWith(
+      color: theme.colorScheme.primary,
+    );
+    // le langage Dart est null-safe, or la propriété displayMedium
+    // pourrait l'être, d'où l'opérateur bang.
+
     return Scaffold(
       // Scaffold est utilisé pour le widget de 1er niveau
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text("'Please don't die !!'"),
       ),
-      body: Column(
-        // Column is a layout widget. It takes a list of children and
-        // arranges them vertically. By default, it sizes itself to fit its
-        // children horizontally, and tries to be as tall as its parent.
-        children: [
-          Text("Plant's name idea:"),
-          Text(appState.current.asPascalCase),
-          ElevatedButton(
-            onPressed: () {
-              appState.getNext();
-            },
-            child: Text('Unsatisfied'),
-          )
-        ],
+
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Plant's name idea:",
+              style: titleStyle,
+            ),
+            SizedBox(height: 40),
+            BigCard(pair: pair),
+            SizedBox(height: 60),
+            ElevatedButton(
+              onPressed: () {
+                appState.getNext();
+              },
+              child: Text(
+                'Unsatisfied',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class BigCard extends StatelessWidget {
+  const BigCard({
+    super.key,
+    required this.pair,
+  });
+
+  final WordPair pair;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final style = theme.textTheme.displayMedium!
+        .copyWith(color: theme.colorScheme.onPrimary);
+
+    return Card(
+      color: theme.colorScheme.primary,
+      elevation: 20,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Text(
+          pair.asPascalCase,
+          style: style,
+          semanticsLabel: '${pair.first} ${pair.second}',
+          // accessibilité : permet de s'assurer de la bonne prononciation
+          // des mots par un lecteur d'écran
+        ),
       ),
     );
   }
