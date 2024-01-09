@@ -31,8 +31,15 @@ class MyAppState extends ChangeNotifier {
   // Le "ChangeNotifier" permet d'informer les autres widgets de ces modifs,
   // l'état est transmis via le ChangeNotifierProvider qui est dans MyApp.
   var current = WordPair.random();
+  var history = <WordPair>[];
+
+  GlobalKey? historyListKey;
 
   void getNext() {
+    history.insert(0, current);
+    var animatedList = historyListKey?.currentState as AnimatedListState?;
+    // AnimatedList is an extension of ListView providing better transitions
+    animatedList?.insertItem(0);
     current = WordPair.random();
     notifyListeners();
     // NotifyListeners() garantit que tout ce qui "surveille" MyAppState soit informé.
@@ -166,6 +173,9 @@ class GeneratorPage extends StatelessWidget {
           style: titleStyle,
         ),
         SizedBox(height: 40),
+        Expanded(
+          child: HistoryListView(),
+        ),
         BigCard(pair: pair),
         SizedBox(height: 40),
         Row(
@@ -275,6 +285,34 @@ class FavoritesPage extends StatelessWidget {
           ),
         )
       ],
+    );
+  }
+}
+
+class HistoryListView extends StatefulWidget {
+  const HistoryListView({super.key});
+  @override
+  State<HistoryListView> createState() => _HistoryListView();
+}
+
+class _HistoryListView extends State<HistoryListView> {
+  final _key = GlobalKey();
+  @override
+  Widget build(BuildContext context) {
+    final appState = context.watch<MyAppState>();
+    appState.historyListKey = _key;
+    return AnimatedList(
+      key: _key,
+      reverse: true,
+      padding: EdgeInsets.only(top: 50),
+      initialItemCount: appState.history.length,
+      itemBuilder: (context, index, animation) {
+        final pair = appState.history[index];
+        return SizeTransition(
+          sizeFactor: animation,
+          child: Text(pair.asPascalCase),
+        );
+      },
     );
   }
 }
