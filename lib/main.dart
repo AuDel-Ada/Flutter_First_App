@@ -47,11 +47,12 @@ class MyAppState extends ChangeNotifier {
 
   var favorites = <WordPair>[];
 
-  void toggleFavorite() {
-    if (favorites.contains(current)) {
-      favorites.remove(current);
+  void toggleFavorite([WordPair? pair]) {
+    pair = pair ?? current;
+    if (favorites.contains(pair)) {
+      favorites.remove(pair);
     } else {
-      favorites.add(current);
+      favorites.add(pair);
     }
     notifyListeners();
   }
@@ -310,7 +311,16 @@ class _HistoryListView extends State<HistoryListView> {
         final pair = appState.history[index];
         return SizeTransition(
           sizeFactor: animation,
-          child: Center(child: Text(pair.asPascalCase)),
+          child: Center(
+              child: TextButton.icon(
+            onPressed: () {
+              appState.toggleFavorite(pair);
+            },
+            icon: appState.favorites.contains(pair)
+                ? Icon(Icons.favorite, size: 12)
+                : SizedBox(),
+            label: Text(pair.asPascalCase),
+          )),
         );
       },
     );
