@@ -84,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // La méthode build() est automatiquement appelée dès que les conditions
     // du widget changent.
     // Elle renvoit forcément à un widget ou à une arborescence de widget imbriqués.
+    var colorScheme = Theme.of(context).colorScheme;
 
     Widget page;
     switch (selectedIndex) {
@@ -97,58 +98,87 @@ class _MyHomePageState extends State<MyHomePage> {
       default:
         throw UnimplementedError('no widget fo $selectedIndex');
     }
-    return LayoutBuilder(builder: (context, constraints) {
-      //permet de rendre l'app responsive
-      return Scaffold(
-        // Scaffold est utilisé pour le widget de 1er niveau
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          title: Text(
-            "' Please don't die !! '",
-            style: TextStyle(
-              color: Colors.white,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-          centerTitle: true,
-        ),
 
-        body: Row(
-          children: [
-            SafeArea(
-              // SafeArea garantit que l'enfant ne sera pas masqué
-              child: NavigationRail(
-                extended: constraints.maxWidth >= 600,
-                destinations: [
-                  NavigationRailDestination(
-                      icon: Icon(Icons.home), label: Text('Home')),
-                  NavigationRailDestination(
-                      icon: Icon(Icons.favorite), label: Text('Favorites')),
-                ],
-                selectedIndex: selectedIndex,
-                onDestinationSelected: (value) {
-                  setState(() {
-                    selectedIndex = value;
-                    // This call to setState tells the Flutter framework that something
-                    // has changed in this State, which causes it to rerun the build
-                    // method below so that the display can reflect the updated values.
-                    // Without setState(), the build method would not be
-                    // called again, and so nothing would appear to happen.
-                  });
-                },
-              ),
-            ),
-            Expanded(
-              // Expanded prendra un max de place
-              child: Container(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                child: page,
-              ),
-            ),
-          ],
+    // permet un changement de page plus smooth
+    var mainArea = ColoredBox(
+      color: colorScheme.surfaceVariant,
+      child: AnimatedSwitcher(
+        duration: Duration(milliseconds: 400),
+        child: page,
+      ),
+    );
+
+    return Scaffold(
+      // Scaffold est utilisé pour le widget de 1er niveau
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: Text(
+          "' Please don't die !! '",
+          style: TextStyle(
+            color: Colors.white,
+            fontStyle: FontStyle.italic,
+          ),
         ),
-      );
-    });
+        centerTitle: true,
+      ),
+
+      body: LayoutBuilder(builder: ((context, constraints) {
+        // permet de rendre l'app responsive
+        if (constraints.maxWidth < 450) {
+          return Column(
+            children: [
+              Expanded(child: mainArea),
+              SafeArea(
+                child: BottomNavigationBar(
+                  items: [
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.home), label: 'Home'),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.favorite), label: 'Favorites')
+                  ],
+                  currentIndex: selectedIndex,
+                  onTap: ((value) {
+                    setState(() {
+                      selectedIndex = value;
+                    });
+                  }),
+                ),
+              ),
+            ],
+          );
+        } else {
+          return Row(
+            children: [
+              SafeArea(
+                // SafeArea garantit que l'enfant ne sera pas masqué
+                child: NavigationRail(
+                  extended: constraints.maxWidth >= 600,
+                  destinations: [
+                    NavigationRailDestination(
+                        icon: Icon(Icons.home), label: Text('Home')),
+                    NavigationRailDestination(
+                        icon: Icon(Icons.favorite), label: Text('Favorites')),
+                  ],
+                  selectedIndex: selectedIndex,
+                  onDestinationSelected: (value) {
+                    setState(() {
+                      selectedIndex = value;
+                      // This call to setState tells the Flutter framework that something
+                      // has changed in this State, which causes it to rerun the build
+                      // method below so that the display can reflect the updated values.
+                      // Without setState(), the build method would not be
+                      // called again, and so nothing would appear to happen.
+                    });
+                  },
+                ),
+              ),
+              Expanded(child: mainArea),
+              // Expanded prendra un max de place
+            ],
+          );
+        }
+      })),
+    );
   }
 }
 
