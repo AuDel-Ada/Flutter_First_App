@@ -298,31 +298,48 @@ class HistoryListView extends StatefulWidget {
 
 class _HistoryListView extends State<HistoryListView> {
   final _key = GlobalKey();
+
+  static const Gradient _maskingGradient = LinearGradient(
+    colors: [Colors.transparent, Colors.black],
+    stops: [0.0, 0.5],
+    // from the top (transparent) to half of the way to the bottom
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<MyAppState>();
     appState.historyListKey = _key;
-    return AnimatedList(
-      key: _key,
-      reverse: true,
-      padding: EdgeInsets.only(top: 50),
-      initialItemCount: appState.history.length,
-      itemBuilder: (context, index, animation) {
-        final pair = appState.history[index];
-        return SizeTransition(
-          sizeFactor: animation,
-          child: Center(
+
+    return ShaderMask(
+      shaderCallback: (bounds) => _maskingGradient.createShader(bounds),
+      // this blend mode takes the opacity of the shader (_maskingGradient)
+      // and applies it to the destination (AnimatedList)
+      blendMode: BlendMode.dstIn,
+      child: AnimatedList(
+        key: _key,
+        reverse: true,
+        padding: EdgeInsets.only(top: 50),
+        initialItemCount: appState.history.length,
+        itemBuilder: (context, index, animation) {
+          final pair = appState.history[index];
+          return SizeTransition(
+            sizeFactor: animation,
+            child: Center(
               child: TextButton.icon(
-            onPressed: () {
-              appState.toggleFavorite(pair);
-            },
-            icon: appState.favorites.contains(pair)
-                ? Icon(Icons.favorite, size: 12)
-                : SizedBox(),
-            label: Text(pair.asPascalCase),
-          )),
-        );
-      },
+                onPressed: () {
+                  appState.toggleFavorite(pair);
+                },
+                icon: appState.favorites.contains(pair)
+                    ? Icon(Icons.favorite, size: 12)
+                    : SizedBox(),
+                label: Text(pair.asPascalCase),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
