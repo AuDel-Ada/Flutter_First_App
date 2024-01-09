@@ -103,9 +103,14 @@ class _MyHomePageState extends State<MyHomePage> {
         // Scaffold est utilisé pour le widget de 1er niveau
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primary,
-          title: Text("' Please don't die !! '",
-              style:
-                  TextStyle(color: Colors.white, fontStyle: FontStyle.italic)),
+          title: Text(
+            "' Please don't die !! '",
+            style: TextStyle(
+              color: Colors.white,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+          centerTitle: true,
         ),
 
         body: Row(
@@ -169,14 +174,11 @@ class GeneratorPage extends StatelessWidget {
 
     return Center(
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text(
-          "Plant's name idea:",
-          style: titleStyle,
-        ),
         SizedBox(height: 40),
-        Expanded(
-          child: HistoryListView(),
-        ),
+        Text("Plant's name idea:", style: titleStyle),
+        SizedBox(height: 40),
+        Expanded(child: HistoryListView()),
+        SizedBox(height: 20),
         BigCard(pair: pair),
         SizedBox(height: 40),
         Row(
@@ -189,21 +191,22 @@ class GeneratorPage extends StatelessWidget {
               icon: Icon(icon),
               label: Text(
                 'Love it !',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
             ),
-            SizedBox(width: 40),
+            SizedBox(width: 20),
             ElevatedButton(
               onPressed: () {
                 appState.getNext();
               },
               child: Text(
-                'Nope',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                'Next',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
             ),
           ],
-        )
+        ),
+        SizedBox(height: 40),
       ]),
     );
   }
@@ -328,14 +331,16 @@ class _HistoryListView extends State<HistoryListView> {
             sizeFactor: animation,
             child: Center(
               child: TextButton.icon(
-                onPressed: () {
-                  appState.toggleFavorite(pair);
-                },
-                icon: appState.favorites.contains(pair)
-                    ? Icon(Icons.favorite, size: 12)
-                    : SizedBox(),
-                label: Text(pair.asPascalCase),
-              ),
+                  onPressed: () {
+                    appState.toggleFavorite(pair);
+                  },
+                  icon: appState.favorites.contains(pair)
+                      ? Icon(Icons.favorite, size: 20)
+                      : SizedBox(),
+                  label: Text(
+                    pair.asPascalCase,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  )),
             ),
           );
         },
