@@ -310,7 +310,7 @@ class _HistoryListView extends State<HistoryListView> {
         final pair = appState.history[index];
         return SizeTransition(
           sizeFactor: animation,
-          child: Text(pair.asPascalCase),
+          child: Center(child: Text(pair.asPascalCase)),
         );
       },
     );
