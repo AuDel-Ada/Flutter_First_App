@@ -7,10 +7,12 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
+  // @override est une annotation : le compiler comprend
+  // qu'il y a une re-définition d'une méthode, etc
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
@@ -47,6 +49,7 @@ class MyAppState extends ChangeNotifier {
 
   var favorites = <WordPair>[];
 
+  // pair est défini dans la class Generator Page
   void toggleFavorite([WordPair? pair]) {
     pair = pair ?? current;
     if (favorites.contains(pair)) {
@@ -69,8 +72,8 @@ class MyHomePage extends StatefulWidget {
   // how it looks.
   // This class is the configuration for the state. It holds the values
   // provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+  // used by the build method of the State.
+  // "Final" variable value can't be changed.
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
