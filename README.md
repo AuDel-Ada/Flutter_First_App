@@ -19,11 +19,16 @@ This project is checked on Chrome for desktop & Galaxy S9 for mobile.
 
 ## About Dart
 
-Typed language
+### Typed language
+
 Type is announced before the variable
-Dart language is null-safe, that's why we have to use specifics operators in some case.
+
+### Null-safe language
+
+So we have to use specifics operators and syntax.
 Remind :
-?? is a null operator -> this operator returns expression
-on its left, except if it is null, and if so, it returns right expression
-! is a bang operator to inform the compiler that even if the variable is a nullable type, the value won't be null
-? after a type means that it can have a null value
+
+- ?? is a null operator -> this operator returns expression on its left,except if it is null, and if so, it returns right expression ;
+- ! is a bang operator to inform the compiler that even if the variable is a nullable type, the value won't be null ;
+- ? after a type means that it can have a null value ;
+- late keyword is used to indicate that a non-nullable variable will be initialized later in the code ;
