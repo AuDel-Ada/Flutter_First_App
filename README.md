@@ -23,6 +23,11 @@ This project is checked on Chrome for desktop & Galaxy S9 for mobile.
 
 Type is announced before the variable
 
+### Keys
+
+Keys are identifiers for widget, they are their unique label.
+"They are useful while adding, removing, or reordering collection of widgets of the same type that hold some state and are at the same level in the widget tree."
+
 ### Null-safe language
 
 So we have to use specifics operators and syntax.
